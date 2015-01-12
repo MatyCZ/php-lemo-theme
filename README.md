@@ -23,10 +23,18 @@ Installation of this module uses composer. For composer documentation, please re
      }
      ```
   3. Run `php composer.phar install`
-  4. Open `my/project/directory/config/application.config.php` and add following keys to your `modules`
+  4. Open `my/project/directory/config/application.config.php` and add module name `LemoTheme` into key `modules` like below:
 
      ```php
-     'LemoTheme',
+     return array(
+         ...
+         'modules' => array(
+            ...
+            'LemoTheme'
+            ...
+         ),
+         ...
+     );
      ```
 
 Installation without composer is not officially supported, and requires you to install and autoload
@@ -40,7 +48,7 @@ that should be used for selecting the current theme as listed bellow:
     'theme_manager' => array(
         'theme' => 'default',
         'theme_paths' => array(
-            __DIR__ . '/../../theme/'
+            './theme/'
         ),
     ),
 
