@@ -106,7 +106,8 @@ class ThemeManager implements
     {
         // Neni definovane zadne tema, nebudeme inicializovat
         $theme = $this->getTheme();
-        if (empty($theme)) {
+        $themePaths = $this->getThemePaths();
+        if (empty($theme) || empty($themePaths)) {
             return;
         }
 
@@ -123,8 +124,9 @@ class ThemeManager implements
 
         // Pokud bylo tema nalezeno, pridameho do seznamu
         $themeFound = false;
-        foreach ($this->getThemePaths() as $themePath) {
+        foreach ($themePaths as $themePath) {
             $themePath = realpath($themePath) . DIRECTORY_SEPARATOR . $this->getTheme() . DIRECTORY_SEPARATOR . 'view';
+
             if (is_dir($themePath)) {
                 $templatePathStack[] = $themePath;
                 $themeFound = true;
