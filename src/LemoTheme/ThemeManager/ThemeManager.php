@@ -36,7 +36,14 @@ class ThemeManager implements
      *
      * @var string
      */
-    protected $theme = 'default';
+    protected $theme = '';
+
+    /**
+     * Name of default theme
+     *
+     * @var string
+     */
+    protected $themeDefault = 'default';
 
     /**
      * @var array
@@ -56,6 +63,13 @@ class ThemeManager implements
      * @var bool
      */
     protected $themesAreLoaded = false;
+
+    /**
+     * Can use default theme, if current theme is not found?
+     *
+     * @var bool
+     */
+    protected $useDefaultTheme = true;
 
     /**
      * @param null $options
@@ -90,8 +104,14 @@ class ThemeManager implements
                 case 'theme':
                     $this->setTheme($value);
                     break;
+                case 'theme_default':
+                    $this->setThemeDefault($value);
+                    break;
                 case 'theme_paths':
                     $this->setThemePaths($value);
+                    break;
+                case 'use_default_theme':
+                    $this->setUseDefaultTheme($value);
                     break;
                 default:
                     break;
@@ -104,17 +124,20 @@ class ThemeManager implements
      */
     public function init()
     {
-        // Neni definovane zadne tema, nebudeme inicializovat
+        // Get needed variables
         $theme = $this->getTheme();
+        $themeDefault = $this->getThemeDefault();
         $themePaths = $this->getThemePaths();
-        if (empty($theme) || empty($themePaths)) {
+
+        // Current theme or theme paths not given, dont init ThemeManager
+        if (empty($theme) && false === $this->getUseDefaultTheme() || empty($themePaths)) {
             return;
         }
 
-        // Nacteme si konfiguraci
+        // Load global configuration
         $config = $this->serviceManager->get('Config');
 
-        // Sestavime si seznam soucasnych cest k sablonam
+        // Load defined paths from config
         $templatePathStack = array();
         if (!empty($config['view_manager']['template_path_stack'])) {
             foreach ($config['view_manager']['template_path_stack'] as $key => $value) {
@@ -122,28 +145,45 @@ class ThemeManager implements
             }
         }
 
-        // Pokud bylo tema nalezeno, pridameho do seznamu
+        // Add current or default theme to paths
         $themeFound = false;
         foreach ($themePaths as $themePath) {
-            $themePath = realpath($themePath) . DIRECTORY_SEPARATOR . $this->getTheme() . DIRECTORY_SEPARATOR . 'view';
+            $themeCurrentPath = realpath($themePath . DIRECTORY_SEPARATOR . $theme);
 
-            if (is_dir($themePath)) {
-                $templatePathStack[] = $themePath;
+            if (is_dir($themeCurrentPath)) {
+                $templatePathStack[] = $themeCurrentPath . DIRECTORY_SEPARATOR . 'view';
                 $themeFound = true;
+            }
+
+            // Try found default theme
+            if (true === $this->getUseDefaultTheme()) {
+                $themeDefaultPath = realpath($themePath . DIRECTORY_SEPARATOR . $themeDefault);
+
+                if (is_dir($themeDefaultPath)) {
+                    $templatePathStack[] = $themeDefaultPath . DIRECTORY_SEPARATOR . 'view';
+                    $themeDefaultFound = true;
+                }
             }
         }
 
-        // V pripade nenalezeni tematu, vyhodime chybu
-        if (false === $themeFound) {
+        // Current theme not found
+        if (false === $themeFound && false === $this->getUseDefaultTheme()) {
             throw new Exception\RuntimeException(sprintf("Theme '%s' was not found", $theme));
         }
 
-        // Nastavime novy seznam cest
+        // Current theme and default theme not found
+        if (false === $themeFound & false === $themeDefaultFound && true === $this->getUseDefaultTheme()) {
+            throw new Exception\RuntimeException(sprintf("Theme '%s' and default theme '%s' was not found", $theme, $themeDefault));
+        }
+
+        // Set new paths to template path stack
         $templatePathResolver = $this->serviceManager->get('ViewTemplatePathStack');
         $templatePathResolver->setPaths($templatePathStack);
     }
 
     /**
+     * Set name of current theme to use
+     *
      * @param  string $theme
      * @return ThemeManager
      */
@@ -155,6 +195,8 @@ class ThemeManager implements
     }
 
     /**
+     * Get name of current theme to use
+     *
      * @return string
      */
     public function getTheme()
@@ -164,6 +206,29 @@ class ThemeManager implements
         }
 
         return $this->theme;
+    }
+
+    /**
+     * Set name of default theme
+     *
+     * @param  string $themeDefault
+     * @return ThemeManager
+     */
+    public function setThemeDefault($themeDefault)
+    {
+        $this->themeDefault = $themeDefault;
+
+        return $this;
+    }
+
+    /**
+     * Get name of default theme
+     *
+     * @return string
+     */
+    public function getThemeDefault()
+    {
+        return $this->themeDefault;
     }
 
     /**
@@ -292,6 +357,29 @@ class ThemeManager implements
     public function clearThemePaths()
     {
         $this->themePaths = new SplStack;
+    }
+
+    /**
+     * Set if manager can use default theme
+     *
+     * @param  bool $useDefaultTheme
+     * @return ThemeManager
+     */
+    public function setUseDefaultTheme($useDefaultTheme)
+    {
+        $this->useDefaultTheme = (bool) $useDefaultTheme;
+
+        return $this;
+    }
+
+    /**
+     * Can use default theme?
+     *
+     * @return bool
+     */
+    public function getUseDefaultTheme()
+    {
+        return $this->useDefaultTheme;
     }
 
     /**
