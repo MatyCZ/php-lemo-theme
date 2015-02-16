@@ -6,6 +6,7 @@ use LemoTheme\ThemeManager\ThemeManagerInterface;
 use Zend\EventManager\ListenerAggregateInterface;
 use Zend\EventManager\EventManagerInterface;
 use Zend\EventManager\EventInterface;
+use Zend\Mvc\MvcEvent;
 use Zend\View\ViewEvent;
 
 class ThemeListener implements ListenerAggregateInterface
@@ -32,9 +33,7 @@ class ThemeListener implements ListenerAggregateInterface
 
     public function attach(EventManagerInterface $events)
     {
-        $this->listeners[] = $events->getSharedManager()->attach(
-            'Zend\View\View', ViewEvent::EVENT_RENDERER, array($this, 'initTheme'), 10000
-        );
+        $this->listeners[] = $events->attach(MvcEvent::EVENT_DISPATCH, array($this, 'initTheme'), 5555);
     }
 
     public function detach(EventManagerInterface $events)
