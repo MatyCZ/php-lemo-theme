@@ -150,11 +150,6 @@ class ThemeManager implements
         foreach ($themePaths as $themePath) {
             $themeCurrentPath = realpath($themePath . DIRECTORY_SEPARATOR . $theme);
 
-            if (is_dir($themeCurrentPath)) {
-                $templatePathStack[] = $themeCurrentPath . DIRECTORY_SEPARATOR . 'view';
-                $themeFound = true;
-            }
-
             // Try found default theme
             if (true === $this->getUseDefaultTheme()) {
                 $themeDefaultPath = realpath($themePath . DIRECTORY_SEPARATOR . $themeDefault);
@@ -163,6 +158,12 @@ class ThemeManager implements
                     $templatePathStack[] = $themeDefaultPath . DIRECTORY_SEPARATOR . 'view';
                     $themeDefaultFound = true;
                 }
+            }
+
+            // Current theme must be set as last
+            if (is_dir($themeCurrentPath)) {
+                $templatePathStack[] = $themeCurrentPath . DIRECTORY_SEPARATOR . 'view';
+                $themeFound = true;
             }
         }
 
