@@ -32,6 +32,13 @@ class ThemeManager implements
     protected $serviceManager;
 
     /**
+     * Name of current skin
+     *
+     * @var string
+     */
+    protected $skin = null;
+
+    /**
      * Name of current theme
      *
      * @var string
@@ -44,6 +51,13 @@ class ThemeManager implements
      * @var string
      */
     protected $themeDefault = 'default';
+
+    /**
+     * Name of current theme group
+     *
+     * @var string
+     */
+    protected $themeGroup = 'aplikace';
 
     /**
      * @var array
@@ -70,6 +84,13 @@ class ThemeManager implements
      * @var bool
      */
     protected $useDefaultTheme = true;
+
+    /**
+     * Can use groups for themes?
+     *
+     * @var bool
+     */
+    protected $useGroups = false;
 
     /**
      * @param null $options
@@ -101,6 +122,9 @@ class ThemeManager implements
 
         foreach ($options as $key => $value) {
             switch (strtolower($key)) {
+                case 'skin':
+                    $this->setSkin($value);
+                    break;
                 case 'theme':
                     $this->setTheme($value);
                     break;
@@ -112,6 +136,9 @@ class ThemeManager implements
                     break;
                 case 'use_default_theme':
                     $this->setUseDefaultTheme($value);
+                    break;
+                case 'use_groups':
+                    $this->setUseGroups($value);
                     break;
                 default:
                     break;
@@ -147,12 +174,20 @@ class ThemeManager implements
 
         // Add current or default theme to paths
         $themeFound = false;
+        $themeDefaultFound = false;
         foreach ($themePaths as $themePath) {
-            $themeCurrentPath = realpath($themePath . DIRECTORY_SEPARATOR . $theme);
+
+            // Generate themes dir base path
+            $themeBasePath = $themePath;
+            if ($this->getUseGroups()) {
+                $themeBasePath .= $this->getThemeGroup() . DIRECTORY_SEPARATOR;
+            }
+
+            $themeCurrentPath = realpath($themeBasePath . $theme);
 
             // Try found default theme
             if (true === $this->getUseDefaultTheme()) {
-                $themeDefaultPath = realpath($themePath . DIRECTORY_SEPARATOR . $themeDefault);
+                $themeDefaultPath = realpath($themeBasePath . $themeDefault);
 
                 if (is_dir($themeDefaultPath)) {
                     $templatePathStack[] = $themeDefaultPath . DIRECTORY_SEPARATOR . 'view';
@@ -180,6 +215,29 @@ class ThemeManager implements
         // Set new paths to template path stack
         $templatePathResolver = $this->serviceManager->get('ViewTemplatePathStack');
         $templatePathResolver->setPaths($templatePathStack);
+    }
+
+    /**
+     * Set name of current skin to use
+     *
+     * @param  string $skin
+     * @return ThemeManager
+     */
+    public function setSkin($skin)
+    {
+        $this->skin = $skin;
+
+        return $this;
+    }
+
+    /**
+     * Get name of current skin to use
+     *
+     * @return string
+     */
+    public function getSkin()
+    {
+        return $this->skin;
     }
 
     /**
@@ -230,6 +288,29 @@ class ThemeManager implements
     public function getThemeDefault()
     {
         return $this->themeDefault;
+    }
+
+    /**
+     * Set name of theme group
+     *
+     * @param  string $themeGroup
+     * @return ThemeManager
+     */
+    public function setThemeGroup($themeGroup)
+    {
+        $this->themeGroup = $themeGroup;
+
+        return $this;
+    }
+
+    /**
+     * Get name of theme group
+     *
+     * @return string
+     */
+    public function getThemeGroup()
+    {
+        return $this->themeGroup;
     }
 
     /**
@@ -381,6 +462,29 @@ class ThemeManager implements
     public function getUseDefaultTheme()
     {
         return $this->useDefaultTheme;
+    }
+
+    /**
+     * Set if manager can use groups for themes
+     *
+     * @param  bool $useGroups
+     * @return ThemeManager
+     */
+    public function setUseGroups($useGroups)
+    {
+        $this->useGroups = (bool) $useGroups;
+
+        return $this;
+    }
+
+    /**
+     * Can use groups for themes?
+     *
+     * @return bool
+     */
+    public function getUseGroups()
+    {
+        return $this->useGroups;
     }
 
     /**

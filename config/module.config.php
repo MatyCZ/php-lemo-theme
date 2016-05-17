@@ -1,18 +1,25 @@
 <?php
 
-return array(
-    'listeners' => array(
+return [
+    'listeners' => [
         'ThemeListener',
-    ),
-    'service_manager' => array(
-        'factories' => array(
-            'ThemeListener' => 'LemoTheme\Listener\ThemeListenerFactory',
-            'ThemeManager'  => 'LemoTheme\ThemeManager\ThemeManagerFactory',
-        )
-    ),
-    'view_helpers' => array(
-        'factories' => array(
-            'Theme'  => 'LemoTheme\View\Helper\ThemeFactory',
-        )
-    ),
-);
+    ],
+    'service_manager' => [
+        'aliases' => [
+            'ThemeListener' => 'LemoTheme\Listener\ThemeListener',
+            'ThemeManager'  => 'LemoTheme\ThemeManager\ThemeManager',
+        ],
+        'factories' => [
+            'LemoTheme\Listener\ThemeListener'    => 'LemoTheme\Listener\ThemeListenerFactory',
+            'LemoTheme\ThemeManager\ThemeManager' => 'LemoTheme\ThemeManager\ThemeManagerFactory',
+        ]
+    ],
+    'view_helpers' => [
+        'aliases' => [
+            'Theme' => 'LemoTheme\View\Helper\Theme',
+        ],
+        'factories' => [
+            'LemoTheme\View\Helper\Theme' => 'LemoTheme\View\Helper\ThemeFactory',
+        ]
+    ],
+];
