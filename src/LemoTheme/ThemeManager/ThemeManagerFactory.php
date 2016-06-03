@@ -2,23 +2,36 @@
 
 namespace LemoTheme\ThemeManager;
 
-use LemoTheme\ThemeManager\ThemeManager;
+use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 class ThemeManagerFactory implements FactoryInterface
 {
     /**
-     * Creates and returns the theme manager
+     * Create an object
      *
-     * @param  ServiceLocatorInterface $serviceLocator
+     * @param  ContainerInterface $container
+     * @param  string             $requestedName
+     * @param  null|array         $options
      * @return ThemeManager
      */
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        $config = $serviceLocator->get('Config');
+        $config = $container->get('Config');
         $options = isset($config['theme_manager']) ? $config['theme_manager'] : null;
 
-        return new ThemeManager($serviceLocator, $options);
+        return new ThemeManager($container, $options);
+    }
+
+    /**
+     * Create an object (v2)
+     *
+     * @param  ServiceLocatorInterface $container
+     * @return ThemeManager
+     */
+    public function createService(ServiceLocatorInterface $container)
+    {
+        return $this($container, ThemeManager::class);
     }
 }

@@ -30,6 +30,6 @@ class Theme extends AbstractHelper
      */
     public function __invoke()
     {
-        return $this->themeManager->getTheme();
+        return $this->themeManager;
     }
 }

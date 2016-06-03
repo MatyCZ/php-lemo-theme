@@ -31,10 +31,10 @@ class ThemeListener implements ListenerAggregateInterface
         $this->themeManager = $themeManager;
     }
 
-    public function attach(EventManagerInterface $events)
+    public function attach(EventManagerInterface $events, $priority = 100)
     {
-        $this->listeners[] = $events->attach(MvcEvent::EVENT_DISPATCH, array($this, 'initTheme'), 100);
-        $this->listeners[] = $events->attach(MvcEvent::EVENT_DISPATCH_ERROR, array($this, 'initTheme'), 100);
+        $this->listeners[] = $events->attach(MvcEvent::EVENT_DISPATCH, array($this, 'initTheme'), $priority);
+        $this->listeners[] = $events->attach(MvcEvent::EVENT_DISPATCH_ERROR, array($this, 'initTheme'), $priority);
     }
 
     public function detach(EventManagerInterface $events)
