@@ -16,7 +16,7 @@ return [
     ],
     'view_helpers' => [
         'aliases' => [
-            'Theme' => 'LemoTheme\View\Helper\Theme',
+            'theme' => 'LemoTheme\View\Helper\Theme',
         ],
         'factories' => [
             'LemoTheme\View\Helper\Theme' => 'LemoTheme\View\Helper\ThemeFactory',
