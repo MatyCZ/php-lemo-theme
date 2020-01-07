@@ -2,8 +2,8 @@
 
 namespace LemoTheme\Event;
 
+use Laminas\EventManager\Event;
 use LemoTheme\Exception;
-use Zend\EventManager\Event;
 
 /**
  * Custom event for use with theme manager

@@ -3,13 +3,12 @@
 
 namespace LemoTheme\ThemeManager;
 
+use Interop\Container\ContainerInterface;
+use Laminas\EventManager\EventManagerInterface;
+use Laminas\Stdlib\SplStack;
 use LemoTheme\Event\ThemeEvent;
 use LemoTheme\Exception;
 use Traversable;
-use Zend\EventManager\EventManager;
-use Zend\EventManager\EventManagerInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
-use Zend\Stdlib\SplStack;
 
 class ThemeManager implements
     ThemeManagerInterface
@@ -27,7 +26,7 @@ class ThemeManager implements
     protected $events = null;
 
     /**
-     * @var ServiceLocatorInterface
+     * @var ContainerInterface
      */
     protected $serviceManager;
 
@@ -93,9 +92,10 @@ class ThemeManager implements
     protected $useGroups = false;
 
     /**
+     * @param ContainerInterface $serviceManager
      * @param null $options
      */
-    public function __construct(ServiceLocatorInterface $serviceManager, $options = null)
+    public function __construct(ContainerInterface $serviceManager, $options = null)
     {
         $this->serviceManager = $serviceManager;
 
@@ -424,7 +424,7 @@ class ThemeManager implements
     /**
      * Returns stack of theme paths
      *
-     * @return SplStack
+     * @return array
      */
     public function getThemePaths()
     {
@@ -438,7 +438,7 @@ class ThemeManager implements
      */
     public function clearThemePaths()
     {
-        $this->themePaths = new SplStack;
+        $this->themePaths = new SplStack();
     }
 
     /**

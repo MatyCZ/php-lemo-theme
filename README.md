@@ -63,8 +63,8 @@ new one by following the tutorial bellow. Make sure that the `theme` option is s
 namespace Foo\Controller;
 
 use LemoTheme\ThemeManager\ThemeManagerInterface;
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\View\Model\ViewModel;
+use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\View\Model\ViewModel;
 
 class BarController extends AbstractActionController
 {

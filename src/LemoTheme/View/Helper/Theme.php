@@ -2,9 +2,9 @@
 
 namespace LemoTheme\View\Helper;
 
+use Laminas\View\Helper\AbstractHelper;
 use LemoTheme\ThemeManager\ThemeManager;
 use LemoTheme\ThemeManager\ThemeManagerInterface;
-use Zend\View\Helper\AbstractHelper;
 
 class Theme extends AbstractHelper
 {

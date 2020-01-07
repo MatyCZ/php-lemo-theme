@@ -2,19 +2,18 @@
 
 namespace LemoTheme\Listener;
 
+use Laminas\EventManager\EventInterface;
+use Laminas\EventManager\EventManagerInterface;
+use Laminas\EventManager\ListenerAggregateInterface;
+use Laminas\Mvc\MvcEvent;
 use LemoTheme\ThemeManager\ThemeManagerInterface;
-use Zend\EventManager\ListenerAggregateInterface;
-use Zend\EventManager\EventManagerInterface;
-use Zend\EventManager\EventInterface;
-use Zend\Mvc\MvcEvent;
-use Zend\View\ViewEvent;
 
 class ThemeListener implements ListenerAggregateInterface
 {
     /**
      * @var array
      */
-    protected $listeners = array();
+    protected $listeners = [];
 
     /**
      * @var ThemeManagerInterface
@@ -33,8 +32,8 @@ class ThemeListener implements ListenerAggregateInterface
 
     public function attach(EventManagerInterface $events, $priority = 100)
     {
-        $this->listeners[] = $events->attach(MvcEvent::EVENT_DISPATCH, array($this, 'initTheme'), $priority);
-        $this->listeners[] = $events->attach(MvcEvent::EVENT_DISPATCH_ERROR, array($this, 'initTheme'), $priority);
+        $this->listeners[] = $events->attach(MvcEvent::EVENT_DISPATCH, [$this, 'initTheme'], $priority);
+        $this->listeners[] = $events->attach(MvcEvent::EVENT_DISPATCH_ERROR, [$this, 'initTheme'], $priority);
     }
 
     public function detach(EventManagerInterface $events)
