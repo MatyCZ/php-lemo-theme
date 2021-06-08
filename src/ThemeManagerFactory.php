@@ -1,15 +1,12 @@
 <?php
 
-namespace LemoTheme\ThemeManager;
+namespace Lemo\Theme;
 
 use Interop\Container\ContainerInterface;
 use Laminas\ServiceManager\Factory\FactoryInterface;
 
 class ThemeManagerFactory implements FactoryInterface
 {
-    /**
-     * @inheritDoc
-     */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null): ThemeManager
     {
         $config = $container->get('Config');

@@ -1,6 +1,6 @@
-LemoTheme
+Lemo\Theme
 ====
-LemoTheme is a Zend Framework 2 module that allows you to switch between various themes.
+Lemo\Theme is a Zend Framework 2 module that allows you to switch between various themes.
 It allows you to create various themes and then switch between them. Themes can be installed in multiple folders.
 
 The current theme can be defined in `global.ini` or `local.ini` for whole application. For the module you can set default theme
@@ -23,14 +23,14 @@ Installation of this module uses composer. For composer documentation, please re
      }
      ```
   3. Run `php composer.phar install`
-  4. Open `my/project/directory/config/application.config.php` and add module name `LemoTheme` into key `modules` like below:
+  4. Open `my/project/directory/config/application.config.php` and add module name `Lemo\Theme` into key `modules` like below:
 
      ```php
      return array(
          ...
          'modules' => array(
             ...
-            'LemoTheme'
+            'Lemo\Theme'
             ...
          ),
          ...
@@ -62,7 +62,7 @@ new one by following the tutorial bellow. Make sure that the `theme` option is s
 
 namespace Foo\Controller;
 
-use LemoTheme\ThemeManager\ThemeManagerInterface;
+use Lemo\Theme\ThemeManagerInterface;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
 

@@ -1,33 +1,33 @@
 <?php
 
-namespace LemoTheme\ThemeManager;
+namespace Lemo\Theme;
 
-use Traversable;
-
-/**
- * Theme manager interface
- */
 interface ThemeManagerInterface
 {
     /**
+     * Init
+     */
+    public function init(): void;
+
+    /**
      * Get name of current theme.
      *
-     * @return string
+     * @return string|null
      */
-    public function getTheme();
+    public function getTheme(): ?string;
 
     /**
      * Get the array of themes names that this manager should load.
      *
      * @return array
      */
-    public function getThemes();
+    public function getThemes(): array;
 
     /**
      * Set an array or Traversable of theme names that this theme manager should load.
      *
-     * @param  array|Traversable $themes
-     * @return ThemeManagerInterface
+     * @param  iterable $themes
+     * @return self
      */
-    public function setThemes($themes);
+    public function setThemes(iterable $themes): self;
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace LemoTheme\Exception;
+namespace Lemo\Theme\Exception;
 
 /**
  * Invalid Argument Exception
