@@ -11,6 +11,9 @@ class Module implements ConfigProviderInterface
         $provider = new ConfigProvider();
 
         return [
+            'listeners' => [
+                ThemeListener::class
+            ],
             'service_manager' => $provider->getDependencyConfig(),
             'view_helpers' => $provider->getViewHelperConfig(),
         ];
